@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <title>About Me</title>
+      <link type="text/css" href="{{  url_for('static', filename='/css/style.css') }}" rel = "stylesheet">
+   </head>
+   <body>
+      <!-- Comment #1: This is the QUEST picture -->
+      <img class="logo" src="https://terpconnect.umd.edu/~jbono/bmgt408c/images/quest-logo.png" alt="QUEST Honors Program Logo">
+      <h1 class="accent">About Divya</h1>
+      <h2>Here is a Quick Intro About Me!</h2>
+      <p>
+         Hi! I’m Divya, a junior studying Computer Science with a Data Science minor at UMD.
+         I am part of the <strong>QUEST Honors Program</strong> and love building impactful tools and products for real world problems.
+         In my free time, I enjoy photography and <em>baking</em>.
+      </p>
+      <p>
+         Two of my strongest skills are <strong>clear communication</strong> and <em>problem solving</em>. I also work well in teams
+         and have good public speaking skills.
+      </p>
+      <p id="spotlight">
+         I mentor peers through QUEST/AWC and love building community—this keeps me learning and growing.
+      </p>
+      <h2>Links & Navigation</h2>
+      <!-- Comment #2: Relative link to /hello route -->
+      <p>
+         Here is a link to hello route: <a href="{{ url_for('hello') }}">hello</a>
+      </p>
+      <p>
+         Here are two of my favorite websites!
+         <a href="https://www.amazon.com/">Amazon</a> and
+         <a href="https://www.netflix.com/" target="_blank">Netflix</a>.
+      </p>
+      <!-- Comment #3: Unordered list of my favorite tv shows using ul tag -->
+      <h2>Here are three of my favorite sitcoms!</h2>
+      <ul>
+         <li>Modern Family</li>
+         <li><em>Friends</em> (all time favorite!)</li>
+         <li>Seinfeld</li>
+      </ul>
+      <h2>Here are three of my favorite foods!</h2>
+      <ol>
+         <li>Pizza</li>
+         <li><strong>Sushi</strong> (all time favorite!)</li>
+         <li>Red Velvet Cake</li>
+      </ol>
+      <h2>Here are some of the computer science courses I took! </h2>
+      <table>
+         <thead>
+            <tr>
+               <th>Course</th>
+               <th>Semester</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+               <td>CMSC330: Organization of Programming Languages</td>
+               <td>Fall 2025</td>
+            </tr>
+            <tr>
+               <td>CMSC250: Discrete Structures</td>
+               <td>Spring 2025</td>
+            </tr>
+            <tr>
+               <td>DATA200: Knowledge in Society – Science, Data & Ethics</td>
+               <td>Fall 2025</td>
+            </tr>
+         </tbody>
+      </table>
+   </body>
+</html>
