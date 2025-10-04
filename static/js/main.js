@@ -3,7 +3,7 @@ const buttonToChangeText = document.getElementById("buttonToChangeText");
 const changeParameter = document.getElementById("changeParameter");
 if (buttonToChangeText && changeParameter) {
     buttonToChangeText.addEventListener("click", () => {
-        changeParameter.textContent = "Yay! This paragraph changed has changed.";
+        changeParameter.textContent = "Yay! This paragraph has changed.";
     });
 }
 // (Comment 2) Handle name form -> "Hello, {name}!"
