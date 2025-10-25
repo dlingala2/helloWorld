@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block page_title %}Favorite Course{% endblock %}
+{% block page_head %}Favorite Course{% endblock %}
+{% block page_content %}
+<!-- check if both subject and course number were provided -->
+{% if subject and course_number %}
+<!-- show the user's favorite course -->
+<p class="lead">You entered your favorite course as: <strong>{{ subject }} {{ course_number }}</strong></p>
+{% else %}
+<!-- message shown when query parameters are missing -->
+<div class="alert alert-info">
+   Please provide your favorite course through query parameters.
+</div>
+<!-- show user example of how to add parameters to the url -->
+<p>example:</p>
+<pre class="bg-light p-2 rounded">
+{{ url_for('favorite_course', _external=True) }}?subject=BMGT&course_number=408C
+   </pre>
+{% endif %}
+{% endblock %}

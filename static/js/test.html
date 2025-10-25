@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated To-Do List</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px 30px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 32px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        #taskInput {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        #taskInput:focus {
+            border-color: #667eea;
+        }
+
+        #addBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        #addBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #addBtn:active {
+            transform: translateY(0);
+        }
+
+        .tasks-list {
+            overflow: hidden;
+        }
+
+        .task-item {
+            background: #f8f9fa;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            position: relative;
+        }
+
+        .task-item:hover {
+            background: #e9ecef;
+        }
+
+        .task-item.slide-in-left {
+            animation: slideInLeft 0.5s ease-out;
+        }
+
+        .task-item.slide-in-right {
+            animation: slideInRight 0.5s ease-out;
+        }
+
+        .task-item.slide-out-left {
+            animation: slideOutLeft 0.5s ease-in forwards;
+        }
+
+        .task-item.slide-out-right {
+            animation: slideOutRight 0.5s ease-in forwards;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutLeft {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(-120%);
+                opacity: 0;
+            }
+        }
+
+        @keyframes slideOutRight {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .task-item.completed .checkbox {
+            background: #667eea;
+        }
+
+        .checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.3s ease;
+        }
+
+        .task-item.completed .checkbox::after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .task-text {
+            flex: 1;
+            color: #2c3e50;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #95a5a6;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+
+        .task-item:hover .delete-btn {
+            opacity: 1;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #95a5a6;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ My To-Do List</h1>
+        <p class="subtitle">Stay organized and productive</p>
+
+        <div class="input-container">
+            <input type="text" id="taskInput" placeholder="Add a new task...">
+            <button id="addBtn">Add</button>
+        </div>
+
+        <div class="tasks-list" id="tasksList"></div>
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number" id="totalTasks">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="activeTasks">0</div>
+                <div class="stat-label">Active</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="completedTasks">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let taskCount = 0;
+        let slideDirection = 'left'; // Alternates between 'left' and 'right'
+
+        function updateStats() {
+            const total = $('.task-item').length;
+            const completed = $('.task-item.completed').length;
+            const active = total - completed;
+
+            $('#totalTasks').text(total);
+            $('#activeTasks').text(active);
+            $('#completedTasks').text(completed);
+        }
+
+        function showEmptyState() {
+            if ($('.task-item').length === 0) {
+                $('#tasksList').html(`
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <p>No tasks yet. Add one above!</p>
+                    </div>
+                `);
+            }
+        }
+
+        function addTask(taskText) {
+            if (!taskText.trim()) return;
+
+            // Remove empty state if exists
+            $('.empty-state').remove();
+
+            // Create task element
+            const $task = $('<div>')
+                .addClass('task-item')
+                .addClass(`slide-in-${slideDirection}`)
+                .html(`
+                    <div class="checkbox"></div>
+                    <div class="task-text">${taskText}</div>
+                    <button class="delete-btn">Delete</button>
+                `);
+
+            // Append to list
+            $('#tasksList').append($task);
+
+            // Alternate slide direction for next task
+            slideDirection = slideDirection === 'left' ? 'right' : 'left';
+
+            // Update stats
+            updateStats();
+        }
+
+        // Add task on button click
+        $('#addBtn').on('click', function() {
+            const taskText = $('#taskInput').val();
+            addTask(taskText);
+            $('#taskInput').val('').focus();
+        });
+
+        // Add task on Enter key
+        $('#taskInput').on('keypress', function(e) {
+            if (e.which === 13) {
+                const taskText = $(this).val();
+                addTask(taskText);
+                $(this).val('');
+            }
+        });
+
+        // Toggle task completion
+        $(document).on('click', '.task-item', function(e) {
+            if (!$(e.target).hasClass('delete-btn')) {
+                $(this).toggleClass('completed');
+                updateStats();
+            }
+        });
+
+        // Delete task with slide out animation
+        $(document).on('click', '.delete-btn', function(e) {
+            e.stopPropagation();
+            const $task = $(this).closest('.task-item');
+
+            // Determine slide out direction (alternate)
+            const slideOut = slideDirection === 'left' ? 'slide-out-right' : 'slide-out-left';
+
+            $task.addClass(slideOut);
+
+            // Remove after animation completes
+            setTimeout(() => {
+                $task.remove();
+                updateStats();
+                showEmptyState();
+            }, 500);
+        });
+
+        // Initialize
+        $(document).ready(function() {
+            showEmptyState();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
